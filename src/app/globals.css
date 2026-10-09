@@ -1587,25 +1587,41 @@ a.brand:hover .bm-frame {
   }
 }
 
-/* solid bands carry every block of text; the code background shows only between them */
-:root {
-  --band: 15 25 48;
-}
-:root[data-theme="light"] {
-  --band: 255 255 255;
-}
+/* every block of text sits on the page color; the code background shows only in the gaps
+   between bands, fading in and out at their soft edges */
 .band {
   position: relative;
-  margin-top: clamp(6rem, 22vh, 13rem);
-  background: rgb(var(--band));
-  border-block: 1px solid rgb(var(--hair) / 0.75);
+  margin-top: clamp(7rem, 26vh, 15rem);
+  background: var(--color-ink);
+}
+.band::before,
+.band::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 48px;
+  pointer-events: none;
+}
+.band::before {
+  top: -48px;
+  background: linear-gradient(to bottom, transparent, var(--color-ink));
+}
+.band::after {
+  bottom: -48px;
+  background: linear-gradient(to top, transparent, var(--color-ink));
 }
 .hero-plate {
   margin-inline: auto;
-  max-width: 62rem;
+  max-width: 64rem;
   padding: clamp(2.2rem, 5vw, 3.6rem) clamp(1.2rem, 4vw, 3rem);
-  border: 1px solid rgb(var(--hair) / 0.75);
-  border-radius: 28px;
-  background: rgb(var(--band));
-  box-shadow: 0 40px 90px -50px rgb(0 0 0 / 0.7);
+  background: radial-gradient(closest-side, var(--color-ink) 72%, transparent 100%);
+}
+
+/* light theme: the same single green accent as the dark theme */
+:root[data-theme="light"] {
+  --color-acc: #059669;
+}
+:root[data-theme="light"] .hero-glow {
+  background: radial-gradient(ellipse 60% 45% at 50% 0%, rgb(5 150 105 / 0.08), transparent 70%);
 }

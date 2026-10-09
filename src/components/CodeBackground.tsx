@@ -5,8 +5,9 @@ import { useEffect, useRef } from "react";
 /**
  * Site background: a minimap of source code that drifts with the page. Text
  * always sits on solid bands (.band), so the code shows only in the gaps between
- * them. In those gaps, blocks of lines are masked, rebuilt line by line, and
- * judged: about one rebuilt block in four turns green (secure).
+ * them. In those gaps an agent implements code from a specification at one of
+ * the benchmark's three scopes (a function, a file, or a repository spanning
+ * several columns); about one finished block in four turns green (secure).
  */
 const COL_W = 200; // width of one code column, CSS px
 const COL_GAP = 76;
@@ -14,12 +15,18 @@ const LINE_H = 13;
 const PARALLAX = 0.35; // the code moves at this fraction of the scroll speed
 const MAX_EVENTS = 4;
 const SECURE_RATE = 0.25;
-const MASK = 0.7, PER_LINE = 0.11, HOLD = 1.5, FADE = 1.2; // seconds
+const INTRO = 0.6, HOLD = 1.5, FADE = 1.2; // seconds
+const SCOPES = [
+  { name: "function", weight: 0.5, cols: 1, lines: [4, 6], perLine: 0.11 },
+  { name: "file", weight: 0.35, cols: 1, lines: [11, 16], perLine: 0.07 },
+  { name: "repo", weight: 0.15, cols: 3, lines: [8, 12], perLine: 0.08 },
+] as const;
 
 type Seg = { x: number; w: number };
 type Line = { y: number; segs: Seg[] };
 type Column = { x: number; lines: Line[] };
-type MaskEvent = { col: number; from: number; to: number; t: number; secure: boolean };
+type Scope = (typeof SCOPES)[number];
+type Build = { cols: number[]; from: number; to: number; t: number; secure: boolean; scope: Scope };
 
 export default function CodeBackground() {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -35,7 +42,7 @@ export default function CodeBackground() {
 
     let W = 0, H = 0, P = 0, DPR = 1, raf = 0, last = 0, spawnIn = 0.4;
     let cols: Column[] = [];
-    let events: MaskEvent[] = [];
+    let events: Build[] = [];
     let ink = "148,163,196", safe = "52,211,153";
     const mono = "ui-monospace, SFMono-Regular, Menlo, monospace";
 
@@ -136,18 +143,22 @@ export default function CodeBackground() {
         if (pickY <= b - a) { sy = a + Math.min(pickY, b - a - 60); break; }
         pickY -= b - a;
       }
-      const ci = Math.floor(Math.random() * cols.length);
-      const col = cols[ci];
+      let pickScope = Math.random();
+      const scope = SCOPES.find((sc) => (pickScope -= sc.weight) <= 0) ?? SCOPES[0];
+      const span = Math.min(scope.cols, cols.length);
+      const c0 = Math.floor(Math.random() * (cols.length - span + 1));
+      const picked = Array.from({ length: span }, (_, i) => c0 + i);
+      const len = scope.lines[0] + Math.floor(Math.random() * (scope.lines[1] - scope.lines[0] + 1));
       const py = (sy + offset()) % P;
-      const len = 3 + Math.floor(Math.random() * 5);
-      const from = Math.max(0, Math.min(col.lines.length - len, Math.floor((py - 20) / LINE_H)));
+      const nLines = cols[c0].lines.length;
+      const from = Math.max(0, Math.min(nLines - len, Math.floor((py - 20) / LINE_H)));
       const to = from + len - 1;
-      if (col.lines.slice(from, to + 1).every((l) => !l.segs.length)) return;
-      if (events.some((e) => e.col === ci && !(to + 2 < e.from || from > e.to + 2))) return;
-      events.push({ col: ci, from, to, t: 0, secure: Math.random() < SECURE_RATE });
+      if (events.some((e) => e.cols.some((c) => picked.includes(c)) && !(to + 2 < e.from || from > e.to + 2))) return;
+      events.push({ cols: picked, from, to, t: 0, secure: Math.random() < SECURE_RATE, scope });
     };
 
-    const duration = (e: MaskEvent) => MASK + (e.to - e.from + 1) * PER_LINE + HOLD + FADE;
+    const written = (e: Build) => INTRO + (e.to - e.from + 1) * e.scope.perLine;
+    const duration = (e: Build) => written(e) + HOLD + FADE;
 
     const draw = () => {
       const off = offset();
@@ -155,46 +166,40 @@ export default function CodeBackground() {
       ctx.drawImage(layer, 0, -off, W, P);
       if (P - off < H) ctx.drawImage(layer, 0, P - off, W, P);
       for (const e of events) {
-        const col = cols[e.col];
-        const lines = col.lines.slice(e.from, e.to + 1);
+        const first = cols[e.cols[0]].lines;
         let dy = -off;
-        if (lines[0].y + dy < -120) dy += P;
-        const top = lines[0].y + dy - 6, bottom = lines[lines.length - 1].y + dy + 9;
+        if (first[e.from].y + dy < -260) dy += P;
+        const top = first[e.from].y + dy - 6, bottom = first[e.to].y + dy + 9;
         if (bottom < 0 || top > H) continue;
-        const left = col.x - 8, width = COL_W + 16;
-        ctx.clearRect(left - 1, top - 1, width + 2, bottom - top + 2);
-        const rebuilt = MASK + lines.length * PER_LINE;
+        const done = written(e);
+        const v = e.t - done;
+        const verdict = e.t < done ? 0 : v < HOLD ? Math.min(1, v / 0.25) : Math.max(0, 1 - (v - HOLD) / FADE);
+        const intro = Math.min(1, e.t / INTRO) * (e.t < done + HOLD ? 1 : verdict);
+        const lit = e.secure && verdict > 0;
 
-        const frame = e.t < MASK ? e.t / MASK : e.t < rebuilt ? 1 : Math.max(0, 1 - (e.t - rebuilt) / 0.6);
-        if (frame > 0) {
-          ctx.save();
-          ctx.setLineDash([3, 4]);
-          ctx.strokeStyle = `rgba(${ink},${0.45 * frame})`;
-          ctx.lineWidth = 1;
-          ctx.strokeRect(left + 0.5, top + 0.5, width - 1, bottom - top - 1);
-          ctx.restore();
-          ctx.font = `10px ${mono}`;
-          ctx.fillStyle = `rgba(${ink},${0.6 * frame})`;
-          ctx.fillText("<MASKED>", left + 6, top - 5);
-        }
-
-        let color = `rgba(${ink},0.26)`;
-        let tag = 0;
-        if (e.t >= rebuilt) {
-          const v = e.t - rebuilt;
-          const k = v < HOLD ? Math.min(1, v / 0.25) : Math.max(0, 1 - (v - HOLD) / FADE);
-          tag = k;
-          color = e.secure ? `rgba(${safe},${0.14 + 0.7 * k})` : `rgba(${ink},${0.12 + 0.14 * k})`;
-        }
-        lines.forEach((ln, i) => {
-          const f = Math.max(0, Math.min(1, (e.t - MASK - i * PER_LINE) / PER_LINE));
-          if (f > 0) drawLine(ctx, ln, dy, color, f);
+        e.cols.forEach((ci, k) => {
+          const col = cols[ci];
+          const left = col.x - 12;
+          ctx.clearRect(left - 2, top - 1, COL_W + 16, bottom - top + 2);
+          // change gutter: new code is being written here
+          ctx.fillStyle = lit ? `rgba(${safe},${0.25 + 0.65 * verdict})` : `rgba(${ink},${0.45 * intro})`;
+          ctx.fillRect(left, top, 2, bottom - top);
+          if (k === 0) {
+            ctx.font = `10px ${mono}`;
+            ctx.fillStyle = `rgba(${ink},${0.6 * intro})`;
+            ctx.fillText(e.scope.name, left, top - 6);
+            if (lit) {
+              ctx.font = `600 10px ${mono}`;
+              ctx.fillStyle = `rgba(${safe},${0.95 * verdict})`;
+              ctx.fillText("secure", left + ctx.measureText(e.scope.name).width + 26, top - 6);
+            }
+          }
+          const color = lit ? `rgba(${safe},${0.14 + 0.7 * verdict})` : `rgba(${ink},${0.14 + 0.14 * Math.max(intro, verdict)})`;
+          for (let i = e.from; i <= e.to; i++) {
+            const f = Math.max(0, Math.min(1, (e.t - INTRO - (i - e.from) * e.scope.perLine) / e.scope.perLine));
+            if (f > 0) drawLine(ctx, col.lines[i], dy, color, f);
+          }
         });
-        if (tag > 0 && e.secure) {
-          ctx.font = `600 10px ${mono}`;
-          ctx.fillStyle = `rgba(${safe},${0.95 * tag})`;
-          ctx.fillText("secure", left + width - 44, top - 5);
-        }
       }
     };
 
