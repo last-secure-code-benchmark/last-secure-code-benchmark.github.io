@@ -1531,3 +1531,60 @@ a:hover .logo-skull {
 :root[data-theme="light"] .section-kicker {
   color: rgb(var(--safe));
 }
+
+/* brand: three lines of code, one of them secure */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: rgb(var(--fg));
+}
+.brand-mark {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+.bm-frame {
+  fill: none;
+  stroke: rgb(var(--fg) / 0.3);
+  stroke-width: 1.5;
+}
+.bm-line {
+  fill: rgb(var(--fg) / 0.45);
+}
+.bm-secure {
+  fill: rgb(var(--safe));
+  transition: width 0.3s;
+}
+.brand-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.brand-short {
+  display: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+a.brand:hover .bm-frame {
+  stroke: rgb(var(--safe) / 0.6);
+}
+.brand-small {
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: rgb(var(--fg-2));
+}
+.brand-small .brand-mark {
+  width: 18px;
+  height: 18px;
+}
+@media (max-width: 1080px) {
+  .brand-name {
+    display: none;
+  }
+  .brand-short {
+    display: inline;
+  }
+}
