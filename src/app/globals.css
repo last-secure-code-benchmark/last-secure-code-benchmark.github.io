@@ -890,7 +890,6 @@ a:hover .logo-skull {
   --m4: 61 214 196;
   --m5: 255 122 168;
   --m6: 226 222 110;
-  --bubble-l: 62%;
   --on-color: 8 14 28;
 }
 :root[data-theme="light"] {
@@ -908,7 +907,6 @@ a:hover .logo-skull {
   --m4: 13 148 136;
   --m5: 219 39 119;
   --m6: 150 135 6;
-  --bubble-l: 48%;
   --on-color: 255 255 255;
 }
 
@@ -967,7 +965,7 @@ a:hover .logo-skull {
 .gap-line {
   position: absolute;
   inset: 0 0 auto 0;
-  max-width: 22ch;
+  max-width: 26ch;
   font-size: 1em;
   font-weight: 650;
   line-height: 1.08;
@@ -1000,13 +998,12 @@ a:hover .logo-skull {
   gap: 0.35rem 1rem;
 }
 .gap-num span {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: clamp(3rem, 8.5vw, 6.5rem);
   font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.045em;
   color: rgb(var(--fg));
-  font-variant-numeric: tabular-nums;
 }
 .gap-num small {
   max-width: 24rem;
@@ -1184,7 +1181,6 @@ a:hover .logo-skull {
   width: 100%;
   min-width: 44rem;
   border-collapse: collapse;
-  font-variant-numeric: tabular-nums;
 }
 .lb2 th {
   padding: 0 0.9rem 0.85rem;
@@ -1237,6 +1233,7 @@ a:hover .logo-skull {
   min-width: 8.5rem;
 }
 .lb2-val {
+  font-variant-numeric: tabular-nums;
   font-family: var(--font-mono);
   font-size: 0.95rem;
   font-weight: 600;
@@ -1568,10 +1565,11 @@ a:hover .logo-skull {
   width: 9rem;
   height: 6px;
   border-radius: 6px;
-  background: linear-gradient(90deg, hsl(4 70% var(--bubble-l)), hsl(81 70% var(--bubble-l)), hsl(158 70% var(--bubble-l)));
+  background: linear-gradient(90deg in oklch, rgb(var(--breach)), rgb(var(--safe)));
 }
 .wm-grid {
   display: grid;
+  align-items: start;
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr));
 }
@@ -1611,8 +1609,9 @@ a:hover .logo-skull {
   overflow: visible;
 }
 .wm-bubble {
-  fill: hsl(var(--h) 70% var(--bubble-l) / 0.9);
-  stroke: hsl(var(--h) 70% var(--bubble-l));
+  fill: color-mix(in oklch, rgb(var(--safe)) var(--p), rgb(var(--breach)));
+  fill-opacity: 0.9;
+  stroke: color-mix(in oklch, rgb(var(--safe)) var(--p), rgb(var(--breach)));
   stroke-width: 1;
   transform-box: fill-box;
   transform-origin: center;
@@ -1659,7 +1658,7 @@ a:hover .logo-skull {
   font-family: var(--font-mono);
   font-size: 0.74rem;
   font-weight: 600;
-  color: hsl(var(--h) 70% var(--bubble-l));
+  color: color-mix(in oklch, rgb(var(--safe)) var(--p), rgb(var(--breach)));
 }
 
 /* model × category */
@@ -1671,7 +1670,6 @@ a:hover .logo-skull {
   min-width: 48rem;
   border-collapse: separate;
   border-spacing: 4px;
-  font-variant-numeric: tabular-nums;
 }
 .hm th {
   padding: 0.3rem 0.4rem;
@@ -1703,7 +1701,8 @@ a:hover .logo-skull {
   font-size: 0.8rem;
   font-weight: 600;
   color: rgb(var(--fg));
-  background: hsl(var(--h) 70% var(--bubble-l) / var(--a));
+  font-variant-numeric: tabular-nums;
+  background: rgb(var(--safe) / var(--a));
   transition: transform 0.2s;
 }
 .hm td:hover {

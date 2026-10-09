@@ -13,7 +13,7 @@ import {
   owaspGroups,
   packCircles,
   pct,
-  rateHue,
+  rateMix,
   type Outcome,
 } from "@/lib/analysis";
 
@@ -239,7 +239,7 @@ function WeaknessMap() {
                 {circles.map((c, i) => {
                   const it = g.items[i];
                   return (
-                    <g key={it.cwe} style={cssVars({ "--h": rateHue(it.joint) })}>
+                    <g key={it.cwe} style={cssVars({ "--p": rateMix(it.joint) })}>
                       <circle className="wm-bubble" cx={c.x} cy={c.y} r={c.r} style={{ transitionDelay: `${120 + i * 70}ms` }}>
                         <title>{`${it.cwe} ${it.name}: ${it.scenarios} scenarios, Func∧Sec ${fmt(it.joint)}%`}</title>
                       </circle>
@@ -254,7 +254,7 @@ function WeaknessMap() {
               </svg>
               <ul className="wm-list">
                 {g.items.map((it) => (
-                  <li key={it.cwe} style={cssVars({ "--h": rateHue(it.joint) })}>
+                  <li key={it.cwe} style={cssVars({ "--p": rateMix(it.joint) })}>
                     <b>{it.cwe}</b>
                     <span>{it.name}</span>
                     <span className="wm-rate">{`${fmt(it.joint)}%`}</span>
@@ -284,7 +284,7 @@ const PLAIN: Record<string, string> = {
 function Heatmap() {
   const groups = owaspGroups();
   const big = groups.filter((g) => g.scenarios >= 10).sort((a, b) => b.joint - a.joint);
-  const cell = (rate: number) => cssVars({ "--h": rateHue(rate), "--a": (0.1 + Math.min(1, rate / 40) * 0.5).toFixed(2) });
+  const cell = (rate: number) => cssVars({ "--a": (0.05 + Math.min(1, rate / 50) * 0.6).toFixed(2) });
   return (
     <Figure
       kicker="Model × category"
