@@ -12,7 +12,7 @@ export default function TraceRunPage() {
   return (
     <>
       <SiteHeader />
-      <main className="flex-1">
+      <main className="flex-1 band-v">
         <Suspense fallback={null}>
           <TraceRunFromQuery />
         </Suspense>

@@ -146,7 +146,17 @@ export default function CodeBackground() {
       let pickScope = Math.random();
       const scope = SCOPES.find((sc) => (pickScope -= sc.weight) <= 0) ?? SCOPES[0];
       const span = Math.min(scope.cols, cols.length);
-      const c0 = Math.floor(Math.random() * (cols.length - span + 1));
+      // on pages with a vertical band (.band-v), write code only in the side strips
+      const blocked = Array.from(document.querySelectorAll(".band-v"))
+        .map((el) => el.getBoundingClientRect())
+        .filter((r) => r.bottom > 0 && r.top < H)
+        .map((r) => [r.left - 56, r.right + 56] as [number, number]);
+      const free = (ci: number) => blocked.every(([a, b]) => cols[ci].x + COL_W < a || cols[ci].x - 12 > b);
+      const starts = Array.from({ length: cols.length - span + 1 }, (_, i) => i).filter((i) =>
+        Array.from({ length: span }, (_, k) => free(i + k)).every(Boolean),
+      );
+      if (!starts.length) return;
+      const c0 = starts[Math.floor(Math.random() * starts.length)];
       const picked = Array.from({ length: span }, (_, i) => c0 + i);
       const len = scope.lines[0] + Math.floor(Math.random() * (scope.lines[1] - scope.lines[0] + 1));
       const py = (sy + offset()) % P;
