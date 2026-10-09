@@ -1,21 +1,19 @@
 import type { CSSProperties, ReactNode } from "react";
 import Reveal from "@/components/Reveal";
 import {
-  ROWS,
   TIERS,
   TIER_LABEL,
-  byLanguage,
+  families,
   fmt,
   granularity,
   joinNames,
-  modelColor,
+  languageOutcomes,
   outcomes,
-  owaspGroups,
-  packCircles,
   pct,
-  rateMix,
-  type Outcome,
+  scenarioGrid,
 } from "@/lib/analysis";
+
+const cssVars = (vars: Record<string, string | number>) => vars as CSSProperties;
 
 function Figure({ kicker, title, sub, children }: { kicker: string; title: string; sub?: string; children: ReactNode }) {
   return (
@@ -34,77 +32,60 @@ function Figure({ kicker, title, sub, children }: { kicker: string; title: strin
   );
 }
 
-const cssVars = (vars: Record<string, string | number>) => vars as CSSProperties;
-
-function ModelLegend() {
+function OutcomeLegend() {
   return (
     <div className="an-legend">
-      {ROWS.map((r) => (
-        <span key={r.model}>
-          <i style={{ background: modelColor(r.model), borderRadius: "50%" }} />
-          {r.model}
-        </span>
-      ))}
+      <span><i className="k-both" />Works and secure</span>
+      <span><i className="k-vuln" />Works, still vulnerable</span>
+      <span><i className="k-rest" />Does not work</span>
     </div>
   );
 }
 
-// ---------------------------------------------------------------- failure modes
+/** A green / gray / faint bar for one set of outcomes, in percent of tasks. */
+function OutcomeBar({ both, funcOnly, title, delay = 0 }: { both: number; funcOnly: number; title: string; delay?: number }) {
+  return (
+    <div className="ob" title={title} style={{ transitionDelay: `${delay}ms` }}>
+      <span className="ob-both" style={{ width: `${both}%` }}>{both >= 9 ? `${Math.round(both)}%` : ""}</span>
+      <span className="ob-vuln" style={{ width: `${funcOnly}%` }}>{funcOnly >= 9 ? `${Math.round(funcOnly)}%` : ""}</span>
+    </div>
+  );
+}
 
-const SEGMENTS: { key: keyof Outcome; label: string; cls: string }[] = [
-  { key: "both", label: "Works and secure", cls: "fm-both" },
-  { key: "funcOnly", label: "Works, still vulnerable", cls: "fm-vuln" },
-  { key: "secOnly", label: "Secure, does not work", cls: "fm-sec" },
-  { key: "neither", label: "Neither", cls: "fm-neither" },
-  { key: "noVerdict", label: "No verdict", cls: "fm-nov" },
-];
+// ---------------------------------------------------------------- outcomes per model
 
-function FailureModes() {
+function Outcomes() {
   const os = outcomes();
   const total = os.reduce((s, o) => s + o.n, 0);
   const vulnerable = os.reduce((s, o) => s + o.funcOnly, 0);
   return (
     <Figure
-      kicker="Failure modes"
+      kicker="Outcomes"
       title={`${Math.round(pct(vulnerable, total))}% of all ${total.toLocaleString("en-US")} runs end with code that works but is still vulnerable`}
       sub="The functional suite checks the feature the task asks for. The security suite replays the original attack against the running program."
     >
-      <div className="an-legend">
-        {SEGMENTS.map((s) => (
-          <span key={s.key}>
-            <i className={s.cls} />
-            {s.label}
-          </span>
-        ))}
-      </div>
-      <div className="fm">
-        {os.map((o, i) => (
-          <div className="fm-row" key={o.model}>
-            <div className="fm-name">
-              {o.model}
-              <span>{o.agent}</span>
-            </div>
-            <div className="fm-bar" style={{ transitionDelay: `${i * 90}ms` }}>
-              {SEGMENTS.map((s) => {
-                const n = o[s.key] as number;
-                const v = pct(n, o.n);
-                return v > 0 ? (
-                  <span key={s.key} className={`fm-seg ${s.cls}`} style={{ width: `${v}%` }} title={`${s.label}: ${fmt(v)}% (${n} of ${o.n})`}>
-                    {v >= 9 ? `${Math.round(v)}%` : ""}
-                  </span>
-                ) : null;
-              })}
-            </div>
+      <OutcomeLegend />
+      {os.map((o, i) => (
+        <div className="row2" key={o.model}>
+          <div className="row2-name">
+            {o.model}
+            <span>{o.agent}</span>
           </div>
-        ))}
-      </div>
+          <OutcomeBar
+            both={pct(o.both, o.n)}
+            funcOnly={pct(o.funcOnly, o.n)}
+            delay={i * 90}
+            title={`${o.model}: works and secure ${fmt(pct(o.both, o.n))}%, works but vulnerable ${fmt(pct(o.funcOnly, o.n))}%, does not work ${fmt(pct(o.n - o.both - o.funcOnly, o.n))}%`}
+          />
+        </div>
+      ))}
     </Figure>
   );
 }
 
 // ---------------------------------------------------------------- granularity
 
-function Granularity() {
+function Context() {
   const { per, avg } = granularity();
   const W = 560, H = 300, L = 46, R = 150, T = 16, B = 34;
   const x = (i: number) => L + (i * (W - L - R)) / (TIERS.length - 1);
@@ -114,7 +95,7 @@ function Granularity() {
   const last = avg[avg.length - 1];
   return (
     <Figure
-      kicker="By granularity"
+      kicker="More context"
       title="More context costs function, not security"
       sub={`From function to repository granularity, the average functional pass rate falls from ${Math.round(avg[0].func)}% to ${Math.round(last.func)}%, while Func∧Sec stays between ${Math.round(Math.min(...joints))}% and ${Math.round(Math.max(...joints))}%.`}
     >
@@ -131,7 +112,9 @@ function Granularity() {
           </text>
         ))}
         {per.map((p) => (
-          <path key={p.model} className="gr-line gr-model" d={path(p.points.map((q) => q.joint))} pathLength={1} style={{ stroke: modelColor(p.model) }} />
+          <path key={p.model} className="gr-line gr-model" d={path(p.points.map((q) => q.joint))} pathLength={1}>
+            <title>{p.model}</title>
+          </path>
         ))}
         <path className="gr-line gr-func" d={path(avg.map((a) => a.func))} pathLength={1} />
         <path className="gr-line gr-joint" d={path(joints)} pathLength={1} />
@@ -152,175 +135,108 @@ function Granularity() {
 // ---------------------------------------------------------------- languages
 
 function Languages() {
-  const ls = byLanguage();
-  const top = Math.max(...ls.flatMap((l) => l.perModel.map((p) => p.rate)));
-  const max = Math.max(40, Math.ceil(top / 10) * 10);
-  const ticks = Array.from({ length: max / 10 + 1 }, (_, i) => i * 10);
-  const lead = ls.slice(0, 3).map((l) => l.label);
-  const trail = ls.slice(-2).map((l) => l.label);
+  const ls = languageOutcomes();
+  const hi = ls[0], lo = ls[ls.length - 1];
   return (
     <Figure
-      kicker="By language"
-      title={`${joinNames(lead)} lead; ${joinNames(trail)} trail`}
-      sub="Func∧Sec per language for each model. The vertical bar marks the average of the six models."
+      kicker="Languages"
+      title={`Secure code ranges from ${Math.round(hi.both)}% in ${hi.label} to ${Math.round(lo.both)}% in ${lo.label}`}
+      sub="Outcomes of the six models together, by the language of the scenario."
     >
-      <ModelLegend />
-      <div className="ld">
-        {ls.map((l) => (
-          <div className="ld-row" key={l.lang}>
-            <div className="ld-label">
-              {l.label}
-              <span>{l.scenarios} scenarios</span>
+      <OutcomeLegend />
+      {ls.map((l, i) => (
+        <div className="row2" key={l.lang}>
+          <div className="row2-name">
+            {l.label}
+            <span>{l.scenarios} scenarios</span>
+          </div>
+          <OutcomeBar
+            both={l.both}
+            funcOnly={l.funcOnly}
+            delay={i * 80}
+            title={`${l.label}: works and secure ${fmt(l.both)}%, works but vulnerable ${fmt(l.funcOnly)}%, does not work ${fmt(l.rest)}%`}
+          />
+        </div>
+      ))}
+    </Figure>
+  );
+}
+
+// ---------------------------------------------------------------- weakness families
+
+function Families() {
+  const fs = families();
+  const low = [...fs].sort((a, b) => a.secureShare - b.secureShare).slice(0, 2).map((f) => f.family.toLowerCase());
+  return (
+    <Figure
+      kicker="Weakness families"
+      title={`Working code is almost never secure for ${joinNames(low)}`}
+      sub="For each family of CWEs in the paper, the gray bar shows how often the code works and the green bar how often it also passes the security suite. The number on the right is the share of working code that is secure."
+    >
+      <div className="fam">
+        {fs.map((f, i) => (
+          <div className="fam-row" key={f.family}>
+            <div className="row2-name">
+              {f.family}
+              <span>{`${f.scenarios} scenarios · ${f.cwes.join(" · ")}`}</span>
             </div>
-            <div className="ld-track">
-              {ticks.map((t) => (
-                <span key={t} className="ld-grid" style={{ left: `${(t / max) * 100}%` }} />
-              ))}
-              <span className="ld-mean" style={{ left: `${(l.mean / max) * 100}%` }} title={`Average: ${fmt(l.mean)}%`} />
-              {l.perModel.map((p) => (
+            <div className="fam-track" title={`${f.family}: works ${fmt(f.func)}%, works and secure ${fmt(f.joint)}%`} style={{ transitionDelay: `${i * 80}ms` }}>
+              <span className="fam-func" style={{ width: `${f.func}%` }} />
+              <span className="fam-joint" style={{ width: `${f.joint}%` }} />
+            </div>
+            <div className="fam-share">
+              <b>{`${Math.round(f.secureShare)}%`}</b>
+              <span>of working code is secure</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Figure>
+  );
+}
+
+// ---------------------------------------------------------------- every scenario × every model
+
+function ScenarioGrid() {
+  const { models, scenarios, never, everyModel } = scenarioGrid();
+  const n = scenarios.length;
+  const firstNever = scenarios.findIndex((s) => s.total === 0);
+  return (
+    <Figure
+      kicker="Every scenario"
+      title={`${never} of ${n} scenarios were never secured by any model`}
+      sub={`Each column is a scenario and each row a model. A cell turns greener with every granularity (function, file, repository) at which the model's code was both functional and secure. Only ${everyModel} scenarios were secured by all six models at one granularity or more.`}
+    >
+      <div className="an-legend">
+        <span><i className="sg-c sg-0" />None</span>
+        <span><i className="sg-c sg-1" />One granularity</span>
+        <span><i className="sg-c sg-2" />Two</span>
+        <span><i className="sg-c sg-3" />All three</span>
+      </div>
+      <div className="sg-wrap">
+        <div className="sg" style={cssVars({ "--n": n })}>
+          {models.map((m, mi) => (
+            <div className="sg-row" key={m}>
+              <span className="sg-label">{m}</span>
+              {scenarios.map((s, si) => (
                 <span
-                  key={p.model}
-                  className="ld-dot"
-                  style={cssVars({ "--x": `${(p.rate / max) * 100}%`, background: modelColor(p.model) })}
-                  title={`${p.model} · ${l.label}: ${fmt(p.rate)}%`}
+                  key={s.id}
+                  className={`sg-c sg-${s.counts[mi]}`}
+                  style={cssVars({ "--d": `${Math.round(si * 5)}ms` })}
+                  title={`${s.id} · ${s.language} · ${s.cwe}\n${m}: secured at ${s.counts[mi]} of 3 granularities`}
                 />
               ))}
             </div>
-            <div className="ld-val">{`${Math.round(l.mean)}%`}</div>
-          </div>
-        ))}
-        <div className="ld-axis">
-          <span />
-          <div className="ld-axis-track">
-            {ticks.map((t) => (
-              <span key={t} style={{ left: `${(t / max) * 100}%` }}>{`${t}%`}</span>
-            ))}
-          </div>
-          <span />
-        </div>
-      </div>
-    </Figure>
-  );
-}
-
-// ---------------------------------------------------------------- weakness map
-
-function WeaknessMap() {
-  const groups = owaspGroups();
-  const K = 7.2; // pixels per square root of a scenario count
-  const hardest = groups
-    .flatMap((g) => g.items)
-    .filter((w) => w.scenarios >= 5)
-    .sort((a, b) => a.joint - b.joint)
-    .slice(0, 3)
-    .map((w) => w.name.toLowerCase());
-  return (
-    <Figure
-      kicker="Weakness map"
-      title={`Hardest to secure: ${joinNames(hardest)}`}
-      sub="One bubble per CWE, grouped by its OWASP Top 10:2025 category and sized by its number of scenarios. Color shows how often the six models' code is both functional and secure."
-    >
-      <div className="wm-scale">
-        <span>Func∧Sec</span>
-        <span>0%</span>
-        <span className="bar" />
-        <span>40%+</span>
-      </div>
-      <div className="wm-grid">
-        {groups.map((g) => {
-          const { circles, w, h } = packCircles(g.items.map((it) => K * Math.sqrt(it.scenarios)));
-          const pw = w + 10, ph = h + 10;
-          return (
-            <div className="wm-card" key={g.code || "outside"}>
-              <p className="wm-code">{g.code ? `${g.code}:2025` : "Not in the Top 10"}</p>
-              <p className="wm-name">{g.name}</p>
-              <p className="wm-meta">{`${g.scenarios} scenarios · Func∧Sec ${fmt(g.joint)}%`}</p>
-              <svg className="wm-svg" width={pw} height={ph} viewBox={`${-pw / 2} ${-ph / 2} ${pw} ${ph}`} role="img" aria-label={`${g.name}: ${g.items.map((it) => it.cwe).join(", ")}`}>
-                {circles.map((c, i) => {
-                  const it = g.items[i];
-                  return (
-                    <g key={it.cwe} style={cssVars({ "--p": rateMix(it.joint) })}>
-                      <circle className="wm-bubble" cx={c.x} cy={c.y} r={c.r} style={{ transitionDelay: `${120 + i * 70}ms` }}>
-                        <title>{`${it.cwe} ${it.name}: ${it.scenarios} scenarios, Func∧Sec ${fmt(it.joint)}%`}</title>
-                      </circle>
-                      {c.r >= 13 && (
-                        <text className="wm-label" x={c.x} y={c.y} style={{ fontSize: `${Math.min(13, Math.max(9, c.r * 0.42))}px` }}>
-                          {it.cwe.replace("CWE-", "")}
-                        </text>
-                      )}
-                    </g>
-                  );
-                })}
-              </svg>
-              <ul className="wm-list">
-                {g.items.map((it) => (
-                  <li key={it.cwe} style={cssVars({ "--p": rateMix(it.joint) })}>
-                    <b>{it.cwe}</b>
-                    <span>{it.name}</span>
-                    <span className="wm-rate">{`${fmt(it.joint)}%`}</span>
-                  </li>
-                ))}
-              </ul>
+          ))}
+          {firstNever >= 0 && (
+            <div className="sg-row sg-note">
+              <span className="sg-label" />
+              <span className="sg-bracket" style={{ gridColumn: `${firstNever + 2} / ${n + 2}` }}>
+                {`never secured · ${never}`}
+              </span>
             </div>
-          );
-        })}
-      </div>
-    </Figure>
-  );
-}
-
-// ---------------------------------------------------------------- model × category
-
-const PLAIN: Record<string, string> = {
-  "": "memory-safety bugs",
-  A01: "broken access control",
-  A05: "injection",
-  A06: "insecure design",
-  A07: "authentication failures",
-  A08: "integrity failures",
-  A10: "exception handling",
-};
-
-function Heatmap() {
-  const groups = owaspGroups();
-  const big = groups.filter((g) => g.scenarios >= 10).sort((a, b) => b.joint - a.joint);
-  const cell = (rate: number) => cssVars({ "--a": (0.05 + Math.min(1, rate / 50) * 0.6).toFixed(2) });
-  return (
-    <Figure
-      kicker="Model × category"
-      title={`Most often secured: ${PLAIN[big[0].code]}. Least often: ${PLAIN[big[big.length - 1].code]}.`}
-      sub="Func∧Sec for each model within each OWASP Top 10:2025 category. Categories with few scenarios move a lot with a single task."
-    >
-      <div className="hm-wrap">
-        <table className="hm">
-          <thead>
-            <tr>
-              <th />
-              {ROWS.map((r) => (
-                <th key={r.model} scope="col">
-                  {r.model}
-                </th>
-              ))}
-              <th scope="col">All</th>
-            </tr>
-          </thead>
-          <tbody>
-            {groups.map((g) => (
-              <tr key={g.code || "outside"}>
-                <th scope="row" className="row">
-                  {g.name}
-                  <span>{`${g.code ? `${g.code}:2025` : "outside the Top 10"} · ${g.scenarios} scenarios`}</span>
-                </th>
-                {g.perModel.map((p) => (
-                  <td key={p.model} style={cell(p.rate)} title={`${p.model}: ${fmt(p.rate)}%`}>
-                    {`${Math.round(p.rate)}%`}
-                  </td>
-                ))}
-                <td className="all" style={cell(g.joint)}>{`${Math.round(g.joint)}%`}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          )}
+        </div>
       </div>
     </Figure>
   );
@@ -337,13 +253,13 @@ export default function Analysis() {
             <p className="lb2-sub">Every figure below comes from the same runs as the leaderboard: six models, all 450 tasks each.</p>
           </div>
         </Reveal>
-        <FailureModes />
+        <Outcomes />
         <div className="an-pair">
-          <Granularity />
+          <Context />
           <Languages />
         </div>
-        <WeaknessMap />
-        <Heatmap />
+        <Families />
+        <ScenarioGrid />
       </div>
     </section>
   );

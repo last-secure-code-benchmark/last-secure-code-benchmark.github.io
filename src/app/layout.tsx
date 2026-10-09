@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import MeshBackground from "@/components/MeshBackground";
+import CodeBackground from "@/components/CodeBackground";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,9 +42,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         <noscript>
-          <style>{".reveal{opacity:1!important;transform:none!important}.lb2-fill,.wm-bubble{transform:none!important}.fm-bar{clip-path:none!important}.gr-line{stroke-dashoffset:0!important}.gr-pt,.wm-label,.ld-dot{opacity:1!important}.ld-dot{left:var(--x)!important}"}</style>
+          <style>{".reveal{opacity:1!important;transform:none!important}.lb2-fill,.fam-func,.fam-joint{transform:none!important}.ob{clip-path:none!important}.gr-line{stroke-dashoffset:0!important}.gr-pt,.sg-c,.gap-models li{opacity:1!important}"}</style>
         </noscript>
-        <MeshBackground />
+        <CodeBackground />
         {children}
       </body>
     </html>
