@@ -5,6 +5,7 @@ import { withBase } from "@/lib/base";
 
 const LINKS = [
   { href: "/#leaderboard", label: "Leaderboard", match: null },
+  { href: "/#analysis", label: "Analysis", match: null },
   { href: "/#overview", label: "Overview", match: null },
   { href: "/#scoring", label: "Scoring", match: null },
   { href: "/#case-study", label: "Case Study", match: null },

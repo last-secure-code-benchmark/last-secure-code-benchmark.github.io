@@ -1,0 +1,156 @@
+{
+ "owasp_categories": {
+  "A01": "Broken Access Control",
+  "A05": "Injection",
+  "A06": "Insecure Design",
+  "A07": "Authentication Failures",
+  "A08": "Software or Data Integrity Failures",
+  "A10": "Mishandling of Exceptional Conditions"
+ },
+ "weaknesses": [
+  {
+   "cwe": "CWE-119",
+   "name": "Memory buffer bounds",
+   "family": "Memory safety",
+   "owasp": null
+  },
+  {
+   "cwe": "CWE-125",
+   "name": "Out-of-bounds read",
+   "family": "Memory safety",
+   "owasp": null
+  },
+  {
+   "cwe": "CWE-190",
+   "name": "Integer overflow",
+   "family": "Memory safety",
+   "owasp": null
+  },
+  {
+   "cwe": "CWE-416",
+   "name": "Use after free",
+   "family": "Memory safety",
+   "owasp": null
+  },
+  {
+   "cwe": "CWE-476",
+   "name": "Null pointer dereference",
+   "family": "Memory safety",
+   "owasp": "A10"
+  },
+  {
+   "cwe": "CWE-787",
+   "name": "Out-of-bounds write",
+   "family": "Memory safety",
+   "owasp": null
+  },
+  {
+   "cwe": "CWE-77",
+   "name": "Command injection",
+   "family": "Injection",
+   "owasp": "A05"
+  },
+  {
+   "cwe": "CWE-78",
+   "name": "OS command injection",
+   "family": "Injection",
+   "owasp": "A05"
+  },
+  {
+   "cwe": "CWE-79",
+   "name": "Cross-site scripting",
+   "family": "Injection",
+   "owasp": "A05"
+  },
+  {
+   "cwe": "CWE-89",
+   "name": "SQL injection",
+   "family": "Injection",
+   "owasp": "A05"
+  },
+  {
+   "cwe": "CWE-94",
+   "name": "Code injection",
+   "family": "Injection",
+   "owasp": "A05"
+  },
+  {
+   "cwe": "CWE-22",
+   "name": "Path traversal",
+   "family": "Path and file handling",
+   "owasp": "A01"
+  },
+  {
+   "cwe": "CWE-434",
+   "name": "File upload",
+   "family": "Path and file handling",
+   "owasp": "A06"
+  },
+  {
+   "cwe": "CWE-284",
+   "name": "Access control",
+   "family": "Access control",
+   "owasp": "A01"
+  },
+  {
+   "cwe": "CWE-306",
+   "name": "Missing authentication",
+   "family": "Access control",
+   "owasp": "A07"
+  },
+  {
+   "cwe": "CWE-352",
+   "name": "Cross-site request forgery",
+   "family": "Access control",
+   "owasp": "A01"
+  },
+  {
+   "cwe": "CWE-639",
+   "name": "User-controlled key",
+   "family": "Access control",
+   "owasp": "A01"
+  },
+  {
+   "cwe": "CWE-862",
+   "name": "Missing authorization",
+   "family": "Access control",
+   "owasp": "A01"
+  },
+  {
+   "cwe": "CWE-863",
+   "name": "Incorrect authorization",
+   "family": "Access control",
+   "owasp": "A01"
+  },
+  {
+   "cwe": "CWE-20",
+   "name": "Input validation",
+   "family": "Input validation and limits",
+   "owasp": "A05"
+  },
+  {
+   "cwe": "CWE-400",
+   "name": "Resource consumption",
+   "family": "Input validation and limits",
+   "owasp": null
+  },
+  {
+   "cwe": "CWE-502",
+   "name": "Deserialization",
+   "family": "Deserialization",
+   "owasp": "A08"
+  },
+  {
+   "cwe": "CWE-200",
+   "name": "Information exposure",
+   "family": "Information exposure",
+   "owasp": "A01"
+  },
+  {
+   "cwe": "CWE-918",
+   "name": "Server-side request forgery",
+   "family": "Server-side request forgery",
+   "owasp": "A01"
+  }
+ ]
+}

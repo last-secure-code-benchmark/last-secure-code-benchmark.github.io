@@ -2,7 +2,7 @@ import { withBase } from "@/lib/base";
 
 export default function Hero() {
   return (
-    <div className="hero-glow bg-grid overflow-hidden border-b border-line">
+    <div className="hero-glow overflow-hidden">
       <div className="container-page relative z-10 pb-16 pt-16 text-center sm:pb-20 sm:pt-24">
         <h1
           className="mx-auto font-mono text-5xl font-bold tracking-tight text-zinc-50 sm:text-6xl"
@@ -18,8 +18,8 @@ export default function Hero() {
           <span className="font-mono text-acc">150</span> real vulnerabilities — 7 languages, 115
           CVEs, 24 CWEs. Each task asks the agent to implement a functional specification that{" "}
           <em>never mentions security</em>, but whose required behavior is derived from a real
-          vulnerability fix. A submission counts only when the project&apos;s tests pass{" "}
-          <em>and</em> the original exploit fails.
+          vulnerability fix. A task counts only when its functional tests pass{" "}
+          <em>and</em> its security tests, which replay the original attack, find no vulnerability.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
