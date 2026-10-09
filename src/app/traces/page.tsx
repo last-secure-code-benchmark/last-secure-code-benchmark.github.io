@@ -12,7 +12,7 @@ export default function TracesPage() {
   return (
     <>
       <SiteHeader />
-      <main className="flex-1">
+      <main className="flex-1 band-v">
         <section className="section">
           <div className="container-page">
             <div className="max-w-2xl">

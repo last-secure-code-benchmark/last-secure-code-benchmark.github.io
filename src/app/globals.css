@@ -1625,3 +1625,28 @@ a.brand:hover .bm-frame {
 :root[data-theme="light"] .hero-glow {
   background: radial-gradient(ellipse 60% 45% at 50% 0%, rgb(5 150 105 / 0.08), transparent 70%);
 }
+
+/* traces pages: one vertical band of page color down the middle; the code shows on both sides */
+.band-v {
+  position: relative;
+  width: min(100%, 75rem);
+  margin-inline: auto;
+  background: var(--color-ink);
+}
+.band-v::before,
+.band-v::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  pointer-events: none;
+}
+.band-v::before {
+  left: -56px;
+  background: linear-gradient(to right, transparent, var(--color-ink));
+}
+.band-v::after {
+  right: -56px;
+  background: linear-gradient(to left, transparent, var(--color-ink));
+}
