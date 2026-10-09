@@ -40,8 +40,8 @@ export function joinNames(xs: string[]): string {
   return `${xs.slice(0, -1).join(", ")}, and ${xs[xs.length - 1]}`;
 }
 
-/** Hue for a Func∧Sec rate: coral red at 0%, emerald at 40% and above. */
-export const rateHue = (rate: number) => Math.round(4 + Math.max(0, Math.min(1, rate / 40)) * 154);
+/** Position of a Func∧Sec rate on the coral-to-emerald scale: 0% at 0, 100% at 40% and above. */
+export const rateMix = (rate: number) => `${Math.round(Math.max(0, Math.min(1, rate / 40)) * 100)}%`;
 
 // ---------------------------------------------------------------- leaderboard
 

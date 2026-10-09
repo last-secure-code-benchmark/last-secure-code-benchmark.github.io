@@ -113,7 +113,7 @@ export default function Leaderboard({ rows, nTasks, nScenarios }: { rows: LbRow[
         <p className="lb2-foot">
           All three: share of the {nScenarios} scenarios solved at function, file, and repository granularity. Every model ran
           at its highest reasoning effort.{" "}
-          <a href={withBase("/traces")}>Browse all {rows.length * nTasks} runs →</a>
+          <a href={withBase("/traces")}>Browse all {(rows.length * nTasks).toLocaleString("en-US")} runs →</a>
         </p>
       </div>
     </section>
