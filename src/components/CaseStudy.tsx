@@ -2,7 +2,7 @@ import { withBase } from "@/lib/base";
 
 export default function CaseStudy() {
   return (
-    <section id="case-study" className="section border-b border-line">
+    <section id="case-study" className="section band">
       <div className="container-page">
         <div className="mx-auto max-w-2xl text-center">
           <p className="section-kicker">deep dive</p>

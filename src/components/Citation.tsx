@@ -23,7 +23,7 @@ export default function Citation() {
   };
 
   return (
-    <section id="citation" className="section">
+    <section id="citation" className="section band">
       <div className="container-page">
         <div className="mx-auto max-w-3xl">
           <p className="section-kicker">cite us</p>

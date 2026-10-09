@@ -244,7 +244,7 @@ function ScenarioGrid() {
 
 export default function Analysis() {
   return (
-    <section id="analysis" className="section">
+    <section id="analysis" className="section band">
       <div className="container-page">
         <Reveal>
           <div className="an-intro">

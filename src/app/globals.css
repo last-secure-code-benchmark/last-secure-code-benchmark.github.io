@@ -904,8 +904,6 @@ a:hover .logo-skull {
   left: 0;
   z-index: -1;
   pointer-events: none;
-  -webkit-mask-image: linear-gradient(90deg, #000 0%, rgb(0 0 0 / 0.3) 26%, rgb(0 0 0 / 0.3) 74%, #000 100%);
-  mask-image: linear-gradient(90deg, #000 0%, rgb(0 0 0 / 0.3) 26%, rgb(0 0 0 / 0.3) 74%, #000 100%);
 }
 
 /* ---------- reveal on scroll ---------- */
@@ -1587,4 +1585,27 @@ a.brand:hover .bm-frame {
   .brand-short {
     display: inline;
   }
+}
+
+/* solid bands carry every block of text; the code background shows only between them */
+:root {
+  --band: 15 25 48;
+}
+:root[data-theme="light"] {
+  --band: 255 255 255;
+}
+.band {
+  position: relative;
+  margin-top: clamp(6rem, 22vh, 13rem);
+  background: rgb(var(--band));
+  border-block: 1px solid rgb(var(--hair) / 0.75);
+}
+.hero-plate {
+  margin-inline: auto;
+  max-width: 62rem;
+  padding: clamp(2.2rem, 5vw, 3.6rem) clamp(1.2rem, 4vw, 3rem);
+  border: 1px solid rgb(var(--hair) / 0.75);
+  border-radius: 28px;
+  background: rgb(var(--band));
+  box-shadow: 0 40px 90px -50px rgb(0 0 0 / 0.7);
 }

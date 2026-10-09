@@ -29,7 +29,7 @@ function Arrow({ label }: { label?: string }) {
 
 export default function Scoring() {
   return (
-    <section id="scoring" className="section border-b border-line">
+    <section id="scoring" className="section band">
       <div className="container-page">
         <div className="mx-auto max-w-2xl text-center">
           <p className="section-kicker">methodology</p>
