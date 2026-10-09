@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { withBase } from "@/lib/base";
 import TaskDetailView from "@/components/TaskDetail";
 import type { CatalogEntry, TaskTrajectory } from "@/lib/types";
 import { catalogUrl, traceUrl } from "@/lib/traces";
@@ -66,7 +67,7 @@ export default function TraceRun({ trajKey, task }: { trajKey: string; task: str
   return (
     <section className="section">
       <div className="container-page">
-        <a href="/traces" className="subrow-toggle">← all traces</a>
+        <a href={withBase("/traces")} className="subrow-toggle">← all traces</a>
 
         <div className="mt-4 grid gap-6 lg:grid-cols-[17rem_1fr]">
           {/* 左栏：run 摘要卡（PTB summary rail） */}

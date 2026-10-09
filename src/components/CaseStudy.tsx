@@ -1,3 +1,5 @@
+import { withBase } from "@/lib/base";
+
 export default function CaseStudy() {
   return (
     <section id="case-study" className="section border-b border-line">
@@ -20,12 +22,12 @@ export default function CaseStudy() {
             <em>probing its own work</em>: tile counts, formats, and CLI behavior, before it
             stopped. <code>42 turns</code>, <code>19 tool calls</code>, <code>5.8 minutes</code>.
             The complete turn-by-turn trace is in the{" "}
-            <a href="/traces" className="text-acc hover:underline">traces browser</a>.
+            <a href={withBase("/traces")} className="text-acc hover:underline">traces browser</a>.
           </p>
           <p>
             Caveats: this is one run of one agent on one task, drawn from a small scored sample —
             it shows what a successful trajectory <em>looks like</em>, not how often they occur.
-            For the aggregate picture see the <a href="/#leaderboard" className="text-acc hover:underline">leaderboard</a>;
+            For the aggregate picture see the <a href={withBase("/#leaderboard")} className="text-acc hover:underline">leaderboard</a>;
             failed and <em>(1,0)</em> runs look very different and are browsable in the same place.
           </p>
         </div>

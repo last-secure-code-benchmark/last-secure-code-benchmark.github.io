@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { withBase } from "@/lib/base";
 
 const LINKS = [
   { href: "/#leaderboard", label: "Leaderboard", match: null },
@@ -18,7 +19,7 @@ export default function NavLinks() {
       {LINKS.map((l) => {
         const active = l.match != null && pathname.startsWith(l.match);
         return (
-          <a key={l.href} href={l.href} className={active ? "text-acc" : "hover:text-acc"}>
+          <a key={l.href} href={withBase(l.href)} className={active ? "text-acc" : "hover:text-acc"}>
             {l.label}
           </a>
         );
