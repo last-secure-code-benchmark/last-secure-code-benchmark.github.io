@@ -14,9 +14,9 @@ const TIERS: Tier[] = ["function", "file", "repo"];
 const OUTCOMES: Exclude<OutcomeFilter, "all">[] = ["reward", "func-failed", "sec-failed"];
 
 const TIER_COLOR: Record<string, string> = {
-  function: "var(--color-tier-function)",
-  file: "var(--color-tier-file)",
-  repo: "var(--color-tier-repo)",
+  function: "rgb(var(--fg-2))",
+  file: "rgb(var(--fg-2))",
+  repo: "rgb(var(--fg-2))",
 };
 
 function outcomeOf(e: CatalogEntry): Exclude<OutcomeFilter, "all"> {
@@ -189,8 +189,8 @@ export default function TracesBrowser() {
           <div className="grid grid-cols-2 divide-x divide-line/60 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3">
             {statItem(catalog == null ? "…" : stats.total, "runs")}
             {statItem(stats.reward, "solved (F∧S)", "text-acc")}
-            {statItem(stats.funcFailed, "func failed (F✗)", "text-rose-300/90")}
-            {statItem(stats.secFailed, "vuln left (F✓S✗)", "text-yellow-300/90")}
+            {statItem(stats.funcFailed, "func failed (F✗)")}
+            {statItem(stats.secFailed, "vuln left (F✓S✗)")}
             {statItem(stats.agents, "models")}
             {statItem(
               stats.total ? `${((stats.reward / stats.total) * 100).toFixed(0)}%` : "—",
@@ -262,12 +262,6 @@ export default function TracesBrowser() {
 
       {/* run list */}
       <div className="card mt-6 overflow-hidden !p-0">
-        <div className="term-bar dark-pane">
-          <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
-          <span className="ml-3 font-mono text-xs text-zinc-500">home@lscb:~/traces$ ls</span>
-        </div>
         <div className="max-h-[46rem] overflow-auto">
           {catalog != null && filtered.length === 0 && (
             <div className="px-4 py-8 text-center">

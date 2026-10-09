@@ -7,9 +7,9 @@ import type { CatalogEntry, TaskTrajectory } from "@/lib/types";
 import { catalogUrl, traceUrl } from "@/lib/traces";
 
 const TIER_COLOR: Record<string, string> = {
-  function: "var(--color-tier-function)",
-  file: "var(--color-tier-file)",
-  repo: "var(--color-tier-repo)",
+  function: "rgb(var(--fg-2))",
+  file: "rgb(var(--fg-2))",
+  repo: "rgb(var(--fg-2))",
 };
 
 function VerdictChip({ label, v }: { label: string; v?: number }) {

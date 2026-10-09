@@ -1650,3 +1650,43 @@ a.brand:hover .bm-frame {
   right: -56px;
   background: linear-gradient(to left, transparent, var(--color-ink));
 }
+
+/* traces pages follow the same rules: no window chrome, one green accent, grays otherwise */
+.tv-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-line);
+  background: rgb(var(--fg) / 0.03);
+}
+:root .chip-user,
+:root .chip-assistant,
+:root .chip-tool,
+:root .chip-system {
+  color: rgb(var(--fg-2));
+  border-color: rgb(var(--fg) / 0.18);
+  background: rgb(var(--fg) / 0.04);
+}
+:root .chip-assistant {
+  color: rgb(var(--fg));
+  border-color: rgb(var(--fg) / 0.3);
+}
+:root .chip-ok {
+  color: rgb(var(--safe));
+  border-color: rgb(var(--safe) / 0.45);
+}
+:root .chip-bad,
+:root .chip-warn {
+  color: rgb(var(--fg-2));
+  border-color: rgb(var(--fg) / 0.22);
+}
+:root .chip-na {
+  color: rgb(var(--fg-3));
+  border-color: rgb(var(--fg) / 0.14);
+}
+:root[data-theme="light"] .pill-active {
+  color: rgb(var(--safe));
+  border-color: rgb(var(--safe) / 0.45);
+  background: rgb(var(--safe) / 0.08);
+}
