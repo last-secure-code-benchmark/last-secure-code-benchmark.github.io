@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { withBase } from "@/lib/base";
 import TraceRun from "@/components/TraceRun";
 
 /** Reads ?key=<model__agent>&task=<task> so one static page serves every trace. */
@@ -11,7 +12,7 @@ export default function TraceRunFromQuery() {
   if (!key || !task) {
     return (
       <p className="container-page py-16 font-mono text-sm text-zinc-500">
-        No trace selected. Pick one from the <a href="/traces" className="text-acc hover:underline">traces browser</a>.
+        No trace selected. Pick one from the <a href={withBase("/traces")} className="text-acc hover:underline">traces browser</a>.
       </p>
     );
   }

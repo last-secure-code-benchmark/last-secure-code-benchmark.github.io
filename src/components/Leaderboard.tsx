@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { withBase } from "@/lib/base";
 import rawData from "@/data/leaderboard.json";
 import type { LeaderboardData, ResultRow } from "@/lib/types";
 
@@ -181,7 +182,7 @@ export default function Leaderboard() {
               {p.label}
             </button>
           ))}
-          <a href="/traces" className="subrow-toggle ml-4">browse per-task traces →</a>
+          <a href={withBase("/traces")} className="subrow-toggle ml-4">browse per-task traces →</a>
         </div>
 
         {/* table 1: reward by context tier */}

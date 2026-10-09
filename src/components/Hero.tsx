@@ -1,3 +1,5 @@
+import { withBase } from "@/lib/base";
+
 export default function Hero() {
   return (
     <div className="hero-glow bg-grid overflow-hidden border-b border-line">
@@ -34,7 +36,7 @@ export default function Hero() {
             </svg>
             Harbor Hub
           </a>
-          <a href="/traces" className="btn btn-ghost">
+          <a href={withBase("/traces")} className="btn btn-ghost">
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <line x1="8" y1="6" x2="21" y2="6" />
               <line x1="8" y1="12" x2="21" y2="12" />
