@@ -1,23 +1,21 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import TraceRun from "@/components/TraceRun";
+import TraceRunFromQuery from "@/components/TraceRunFromQuery";
 
 export const metadata: Metadata = {
   title: "Trace · Last Secure Code Benchmark",
 };
 
-export default async function TraceRunPage({
-  params,
-}: {
-  params: Promise<{ key: string; task: string }>;
-}) {
-  const { key, task } = await params;
+export default function TraceRunPage() {
   return (
     <>
       <SiteHeader />
       <main className="flex-1">
-        <TraceRun trajKey={key} task={decodeURIComponent(task)} />
+        <Suspense fallback={null}>
+          <TraceRunFromQuery />
+        </Suspense>
       </main>
       <SiteFooter />
     </>

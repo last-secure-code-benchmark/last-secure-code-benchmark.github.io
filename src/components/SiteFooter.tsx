@@ -6,12 +6,11 @@ export default function SiteFooter() {
           <span className="text-acc">&gt;_</span> Last Secure Code Benchmark — a benchmark project page
         </p>
         <div className="flex items-center gap-5">
-          <a href="https://arxiv.org/abs/0000.00000" className="hover:text-acc">Paper</a>
-          <a href="https://github.com/your-org/your-repo" className="hover:text-acc">Code</a>
-          <a href="https://your-blog.example.com/post" className="hover:text-acc">Blog</a>
+          <a href="https://github.com/alibaba/last-secure-code-benchmark" className="hover:text-acc">Code</a>
+          <a href="https://hub.harborframework.com/datasets/last-secure-code-benchmark/last-secure-code-benchmark" className="hover:text-acc">Harbor Hub</a>
         </div>
         <p className="flex items-center gap-4">
-          <span>© {new Date().getFullYear()} Your Team</span>
+          <span>© {new Date().getFullYear()} LSCBench</span>
           <span className="text-zinc-700" title="try it">
             ↑↑↓↓←→←→BA
           </span>
