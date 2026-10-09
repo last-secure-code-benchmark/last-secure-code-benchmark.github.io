@@ -44,7 +44,7 @@ function TurnDetail({ t }: { t: TrajTurn }) {
     return (
       <div className="dark-pane mt-2 space-y-2 rounded border border-line/70 bg-[#0d1526] p-2.5">
         {t.reasoning && (
-          <p className="whitespace-pre-wrap break-words font-mono text-xs leading-relaxed text-violet-200/80">
+          <p className="whitespace-pre-wrap break-words font-mono text-xs leading-relaxed text-zinc-400">
             {t.reasoning}
           </p>
         )}
@@ -95,9 +95,9 @@ function TurnRow({ turn, open, onToggle }: { turn: TrajTurn; open: boolean; onTo
 /** verifier 日志按行着色：功能测试绿、漏洞测试红、分隔线灰 */
 function logLineCls(l: string): string {
   if (/test_func\.py|VSB_BUILD=pass|PASSED| passed/.test(l)) return "text-emerald-300/90";
-  if (/test_vuln\.py|FAILED| failed|Error/i.test(l)) return "text-rose-300/90";
+  if (/test_vuln\.py|FAILED| failed|Error/i.test(l)) return "font-semibold text-zinc-100";
   if (/^=+|^-+/.test(l)) return "text-zinc-600";
-  if (/^\[eval\]|^\[start\]/.test(l)) return "text-cyan-300/70";
+  if (/^\[eval\]|^\[start\]/.test(l)) return "text-zinc-500";
   return "text-zinc-400";
 }
 
@@ -218,11 +218,8 @@ export default function TaskDetailView({ taskId, detail }: { taskId: string; det
 
   return (
     <div className="overflow-hidden rounded-lg border border-line bg-panel">
-      <div className="term-bar !px-3 !py-2">
-        <span className="h-2 w-2 rounded-full bg-red-500/70" />
-        <span className="h-2 w-2 rounded-full bg-yellow-500/70" />
-        <span className="h-2 w-2 rounded-full bg-green-500/70" />
-        <span className="ml-2 truncate font-mono text-[11px] text-zinc-500">{taskId}</span>
+      <div className="tv-head">
+        <span className="truncate font-mono text-[11px] text-zinc-500">{taskId}</span>
         <span className="ml-auto flex shrink-0 items-center gap-1">
           {tabs.map((t) => (
             <button
