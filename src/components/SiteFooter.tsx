@@ -1,6 +1,6 @@
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-line">
+    <footer className="band">
       <div className="container-page flex flex-col items-center justify-between gap-4 py-10 font-mono text-xs text-zinc-500 sm:flex-row">
         <p className="brand brand-small">
           <svg viewBox="0 0 24 24" className="brand-mark" aria-hidden="true">

@@ -3,7 +3,8 @@ import { withBase } from "@/lib/base";
 export default function Hero() {
   return (
     <div className="hero-glow overflow-hidden">
-      <div className="container-page relative z-10 pb-16 pt-16 text-center sm:pb-20 sm:pt-24">
+      <div className="container-page relative z-10 pb-4 pt-12 sm:pt-16">
+        <div className="hero-plate text-center">
         <h1
           className="mx-auto font-mono text-5xl font-bold tracking-tight text-zinc-50 sm:text-6xl"
         >
@@ -47,6 +48,7 @@ export default function Hero() {
             </svg>
             Traces
           </a>
+        </div>
         </div>
       </div>
     </div>

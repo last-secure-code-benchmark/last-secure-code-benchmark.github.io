@@ -15,7 +15,7 @@ const SETUP: [string, string][] = [
 
 export default function Overview() {
   return (
-    <section id="overview" className="section border-b border-line">
+    <section id="overview" className="section band">
       <div className="container-page">
         <div className="mx-auto max-w-2xl text-center">
           <p className="section-kicker">overview</p>

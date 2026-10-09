@@ -56,7 +56,7 @@ export default function Leaderboard({ rows, nTasks, nScenarios }: { rows: LbRow[
   const cols = VIEWS[view].cols;
 
   return (
-    <section id="leaderboard" className="section">
+    <section id="leaderboard" className="section band">
       <div className="container-page">
         <Reveal>
           <div className="lb2-head">

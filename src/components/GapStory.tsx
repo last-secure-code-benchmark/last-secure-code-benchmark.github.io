@@ -57,7 +57,7 @@ export default function GapStory({ rows, nTasks }: { rows: StoryRow[]; nTasks: n
   }, []);
 
   return (
-    <section ref={ref} id="gap" className={`section gap ${shown ? "is-shown" : ""}`}>
+    <section ref={ref} id="gap" className={`section band gap ${shown ? "is-shown" : ""}`}>
       <div className="container-page">
         <p className="gap-kicker">The gap</p>
         <h2 className="gap-title">Agents write code that works, but rarely code that is secure.</h2>
