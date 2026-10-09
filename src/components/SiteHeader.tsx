@@ -6,18 +6,15 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-ink/80 backdrop-blur">
       <div className="container-page flex h-14 items-center justify-between">
-        <a href={withBase("/")} className="flex items-center gap-2.5 font-mono text-sm font-bold text-zinc-50">
-          {/* pixel shield + checkmark */}
-          <svg viewBox="0 0 12 12" className="logo-skull h-5 w-5" fill="currentColor" fillRule="evenodd" aria-hidden="true">
-            <path d="M1 0h10v1h1v6h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1H0V1h1V0z M3 4h1v1H3z M3 5h1v1H3z M4 5h1v1H4z M4 6h1v1H4z M5 6h1v1H5z M5 7h1v1H5z M6 5h1v1H6z M6 6h1v1H6z M7 4h1v1H7z M7 5h1v1H7z M8 3h1v1H8z M8 4h1v1H8z M9 2h1v1H9z M9 3h1v1H9z" />
+        <a href={withBase("/")} className="brand" aria-label="Last Secure Code Benchmark, home">
+          <svg viewBox="0 0 24 24" className="brand-mark" aria-hidden="true">
+            <rect x="1.5" y="1.5" width="21" height="21" rx="6" className="bm-frame" />
+            <rect x="6" y="7" width="9" height="2.2" rx="1.1" className="bm-line" />
+            <rect x="6" y="10.9" width="12" height="2.2" rx="1.1" className="bm-secure" />
+            <rect x="6" y="14.8" width="6.5" height="2.2" rx="1.1" className="bm-line" />
           </svg>
-          <span>
-            <span className="text-acc">home</span>
-            <span className="text-zinc-500">@</span>
-            lscb
-            <span className="text-zinc-500">:~#</span>
-            <span className="cursor-blink ml-1 text-acc">▊</span>
-          </span>
+          <span className="brand-name">Last Secure Code Benchmark</span>
+          <span className="brand-short">LSCBench</span>
         </a>
         <NavLinks />
         <div className="flex items-center gap-2.5">
