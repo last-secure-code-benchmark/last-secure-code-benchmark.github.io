@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import MeshBackground from "@/components/MeshBackground";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -15,12 +16,12 @@ const jbMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Last Secure Code Benchmark: Is the Code You Vibe Secure?",
   description:
-    "Last Secure Code Benchmark (LSCB) — 450 tasks built from 150 real vulnerabilities across 7 languages, 115 CVEs and 24 CWEs. Each task asks a coding agent to implement a functional specification that never mentions security, but whose required behavior is derived from a real vulnerability fix. A submission counts only when the project's tests pass and the original exploit fails.",
+    "Last Secure Code Benchmark (LSCB) — 450 tasks built from 150 real vulnerabilities across 7 languages, 115 CVEs and 24 CWEs. Each task asks a coding agent to implement a functional specification that never mentions security, but whose required behavior is derived from a real vulnerability fix. A submission counts only when the project's tests pass and the security tests, which replay the original attack, find no vulnerability.",
   keywords: ["CyberSecurity", "Code Generation", "Agent", "Secure Code Generation"],
   openGraph: {
     title: "Last Secure Code Benchmark: Is the Code You Vibe Secure?",
     description:
-      "450 tasks from 150 real vulnerabilities. Agents reconstruct code from security-blind functional specs; reward = tests pass ∧ original exploit fails.",
+      "450 tasks from 150 real vulnerabilities. Agents reconstruct code from security-blind functional specs; a task counts only when its functional and security tests both pass.",
   },
 };
 
@@ -39,7 +40,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <noscript>
+          <style>{".reveal{opacity:1!important;transform:none!important}.lb2-fill,.wm-bubble{transform:none!important}.fm-bar{clip-path:none!important}.gr-line{stroke-dashoffset:0!important}.gr-pt,.wm-label,.ld-dot{opacity:1!important}.ld-dot{left:var(--x)!important}"}</style>
+        </noscript>
+        <MeshBackground />
+        {children}
+      </body>
     </html>
   );
 }
