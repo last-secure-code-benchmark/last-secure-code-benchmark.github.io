@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import TaskDetailView from "@/components/TaskDetail";
 import type { CatalogEntry, TaskTrajectory } from "@/lib/types";
+import { catalogUrl, traceUrl } from "@/lib/traces";
 
 const TIER_COLOR: Record<string, string> = {
   function: "var(--color-tier-function)",
@@ -26,14 +27,14 @@ export default function TraceRun({ trajKey, task }: { trajKey: string; task: str
   const [copied, setCopied] = useState(false);
 
   const jsonUrl = useMemo(
-    () => `/trajectories/${trajKey}/${encodeURIComponent(task)}.json`,
+    () => traceUrl(trajKey, task),
     [trajKey, task],
   );
 
   useEffect(() => {
     let dead = false;
     setLoading(true);
-    fetch("/trajectories/catalog.json")
+    fetch(catalogUrl)
       .then((r) => (r.ok ? r.json() : []))
       .then((c: CatalogEntry[]) => {
         if (!dead) setEntry(c.find((e) => e.traj_key === trajKey && e.task === task) || null);

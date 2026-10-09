@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { catalogUrl, tracePageHref } from "@/lib/traces";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import type { CatalogEntry, Tier } from "@/lib/types";
 
@@ -115,7 +116,7 @@ export default function TracesBrowser() {
   const [groupKey, setGroupKey] = useState<GroupKey>("tier");
 
   useEffect(() => {
-    fetch("/trajectories/catalog.json")
+    fetch(catalogUrl)
       .then((r) => (r.ok ? r.json() : []))
       .then(setCatalog)
       .catch(() => setCatalog([]));
@@ -284,7 +285,7 @@ export default function TracesBrowser() {
               {xs.map((e) => (
                 <Link
                   key={`${e.traj_key}/${e.task}`}
-                  href={`/traces/${e.traj_key}/${encodeURIComponent(e.task)}`}
+                  href={tracePageHref(e.traj_key, e.task)}
                   className="row-hover flex w-full flex-wrap items-center gap-x-3 gap-y-1 border-b border-line/40 px-4 py-2.5 text-left last:border-0"
                 >
                   <span className="font-mono text-xs">

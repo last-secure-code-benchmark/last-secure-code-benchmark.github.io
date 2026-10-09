@@ -22,7 +22,7 @@ export default function SiteHeader() {
         <div className="flex items-center gap-2.5">
           <ThemeToggle />
           <a
-            href="https://github.com/your-org/your-repo"
+            href="https://github.com/alibaba/last-secure-code-benchmark"
             target="_blank"
             rel="noopener"
             className="btn btn-ghost !px-3 !py-1.5 text-xs"

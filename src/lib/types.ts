@@ -51,7 +51,7 @@ export interface TaskResult {
   exit_reason?: string;
   time_min?: number;
   llm_calls?: number;
-  /** 轨迹在 /trajectories/<traj_key>/<id>.json 里，展开时懒加载 */
+  /** 轨迹在 release 仓库 traces/<traj_key>/<id>.json，展开时懒加载（见 src/lib/traces.ts） */
   has_traj?: boolean;
 }
 
@@ -75,7 +75,7 @@ export interface ResultRow extends TierSplit {
   /** 有 verifier 分数的题数（非正常退出的题不计入） */
   n_scored?: number;
   n_total?: number;
-  /** 轨迹文件名：/trajectories/<traj_key>.json */
+  /** 轨迹目录名：release 仓库 traces/<traj_key>/ */
   traj_key?: string;
   metrics?: Metrics;
   metrics_success?: Metrics;
@@ -97,7 +97,7 @@ export interface LeaderboardData {
   results: ResultRow[];
 }
 
-/** /traces 浏览页的目录条目（public/trajectories/catalog.json） */
+/** /traces 浏览页的目录条目（release 仓库 traces/catalog.json） */
 export interface CatalogEntry {
   traj_key: string;
   model?: string;
