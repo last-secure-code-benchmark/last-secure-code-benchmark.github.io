@@ -114,7 +114,7 @@ export default function CodeBackground() {
       layer.height = Math.floor(P * DPR);
       lctx.setTransform(DPR, 0, 0, DPR, 0, 0);
       lctx.clearRect(0, 0, W, P);
-      for (const col of cols) for (const line of col.lines) drawLine(lctx, line, 0, `rgba(${ink},0.12)`);
+      for (const col of cols) for (const line of col.lines) drawLine(lctx, line, 0, `rgba(${ink},0.065)`);
     };
 
     /** Vertical stretches of the viewport not covered by a solid band or the header. */
