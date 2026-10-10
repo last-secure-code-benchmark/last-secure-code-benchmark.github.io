@@ -1,36 +1,77 @@
+import Reveal from "@/components/Reveal";
+import EmbeddedTrace from "@/components/EmbeddedTrace";
+import cs from "@/data/case_study.json";
+import { tracePageHref } from "@/lib/traces";
 import { withBase } from "@/lib/base";
 
+const TRAJ_KEY = "gpt-5-6-sol__codex";
+
+/** Short, plain labels for the recorded phases of the example run. */
+const PHASE_LABEL: Record<string, string> = {
+  recon: "Read the spec and tests",
+  implement: "Write index.js",
+  test: "Run the tests",
+  probe: "Probe its own work",
+  summary: "Summarize",
+};
+
 export default function CaseStudy() {
+  const phases = cs.phases.map((p) => {
+    const key = p.label.split(/\s|—/)[0];
+    return { key, label: PHASE_LABEL[key] ?? p.label, count: p.count };
+  });
+  const steps = phases.reduce((s, p) => s + p.count, 0);
+
   return (
     <section id="case-study" className="section band">
       <div className="container-page">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="section-kicker">deep dive</p>
-          <h2 className="section-title mt-2">Example: A Full Trajectory</h2>
-        </div>
-        <div className="content mx-auto mt-8 max-w-3xl">
-          <p>
-            One real run from the leaderboard: <strong className="text-zinc-200">CVE-2020-28451 ·
-            image-tiler (file tier)</strong>, solved by GPT-5.6-Sol / Codex. The agent received the
-            file spec and the project&apos;s immutable tests, and had to supply a working{" "}
-            <code>index.js</code> that keeps the suite green <em>and</em> the vulnerability closed.
+        <Reveal>
+          <div className="an-intro">
+            <p className="section-kicker">Example</p>
+            <h2 className="lb2-title">One run, end to end</h2>
+            <p className="lb2-sub">
+              {cs.model} in {cs.agent} rebuilds <code>index.js</code> of image-tiler (CVE-2020-28451) at file granularity, from
+              its specification alone. It passes both the functional and the security suite in {cs.time_min} minutes.
+            </p>
+          </div>
+        </Reveal>
+
+        <Reveal className="cs-phases" delay={100}>
+          <p className="an-kicker">The agent&apos;s {steps} steps</p>
+          <div className="cs-strip" role="img" aria-label={phases.map((p) => `${p.label}: ${p.count}`).join(", ")}>
+            {phases.map((p) => (
+              <span
+                key={p.key}
+                className={`cs-seg ${p.key === "implement" ? "is-code" : ""}`}
+                style={{ flexGrow: p.count }}
+                title={`${p.label}: ${p.count} step${p.count === 1 ? "" : "s"}`}
+              >
+                <b>{p.count}</b>
+                <small>{p.label}</small>
+              </span>
+            ))}
+          </div>
+          <p className="an-note">
+            A typical successful run: a short read, one implementation, one test run, then about half the run spent checking
+            its own output (tile counts, formats, and command-line behavior) before it stops.
           </p>
-          <p>
-            The shape of the run is typical of successful solves: a short reconnaissance burst
-            (reading the spec, the retained tests, and the expected image tiles), a single-shot
-            implementation, one test run — then roughly half the run spent{" "}
-            <em>probing its own work</em>: tile counts, formats, and CLI behavior, before it
-            stopped. <code>42 turns</code>, <code>19 tool calls</code>, <code>5.8 minutes</code>.
-            The complete turn-by-turn trace is in the{" "}
-            <a href={withBase("/traces")} className="text-acc hover:underline">traces browser</a>.
-          </p>
-          <p>
-            Caveats: this is one run of one agent on one task, drawn from a small scored sample —
-            it shows what a successful trajectory <em>looks like</em>, not how often they occur.
-            For the aggregate picture see the <a href={withBase("/#leaderboard")} className="text-acc hover:underline">leaderboard</a>;
-            failed and <em>(1,0)</em> runs look very different and are browsable in the same place.
-          </p>
-        </div>
+        </Reveal>
+
+        <Reveal className="cs-window" delay={180}>
+          <div className="cs-window-head">
+            <span>
+              <b>{cs.task}</b> · {cs.model} / {cs.agent}
+            </span>
+            <a href={withBase(tracePageHref(TRAJ_KEY, cs.task))}>Open in the traces browser →</a>
+          </div>
+          <EmbeddedTrace trajKey={TRAJ_KEY} task={cs.task} />
+        </Reveal>
+
+        <p className="lb2-foot">
+          This is one run of one agent on one task. It shows what a successful run looks like, not how often one happens; the{" "}
+          <a href={withBase("/#leaderboard")}>leaderboard</a> has the aggregate picture, and all 2,700 runs are in the{" "}
+          <a href={withBase("/traces")}>traces browser</a>.
+        </p>
       </div>
     </section>
   );
