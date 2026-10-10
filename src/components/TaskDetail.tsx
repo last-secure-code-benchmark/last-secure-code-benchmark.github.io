@@ -1,6 +1,9 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode, useEffect } from "react";
+import SpecMarkdown from "@/components/SpecMarkdown";
+import specIndex from "@/data/specs.json";
+import { taskFileUrl } from "@/lib/traces";
 import type { TaskTrajectory, TrajTurn } from "@/lib/types";
 
 /* ------------------------------------------------------------------ */
@@ -172,17 +175,78 @@ function FilesView({ files }: { files: Record<string, string | null> }) {
   );
 }
 
+/* ---------------- specs: the specification the agent worked from ---------------- */
+
+function specLabel(path: string): string {
+  if (path === "instruction.md") return "Task statement";
+  if (path === "environment/spec.md") return "Repository spec";
+  return path.replace(/^environment\/file_specs\//, "").replace(/\.md$/, "").split("__").join("/");
+}
+
+function SpecsView({ task, paths }: { task: string; paths: string[] }) {
+  const [sel, setSel] = useState(paths.find((p) => p !== "instruction.md") ?? paths[0]);
+  const [texts, setTexts] = useState<Record<string, string | null>>({});
+
+  useEffect(() => {
+    if (!sel || sel in texts) return;
+    let dead = false;
+    fetch(taskFileUrl(task, sel))
+      .then((r) => (r.ok ? r.text() : Promise.reject(new Error(String(r.status)))))
+      .then((t) => !dead && setTexts((m) => ({ ...m, [sel]: t })))
+      .catch(() => !dead && setTexts((m) => ({ ...m, [sel]: null })));
+    return () => {
+      dead = true;
+    };
+  }, [task, sel, texts]);
+
+  const text = texts[sel];
+  return (
+    <div className="grid md:grid-cols-[14rem_1fr]">
+      <div className="max-h-[30rem] overflow-auto border-b border-line/60 py-1 md:border-b-0 md:border-r">
+        {paths.map((p) => (
+          <button
+            key={p}
+            onClick={() => setSel(p)}
+            className={`row-hover flex w-full items-baseline gap-2 px-3 py-1.5 text-left font-mono text-xs ${
+              sel === p ? "bg-acc/10 text-acc" : "text-zinc-300"
+            }`}
+          >
+            <span className="min-w-0 flex-1 truncate">{specLabel(p)}</span>
+          </button>
+        ))}
+      </div>
+      <div className="max-h-[30rem] overflow-auto px-4 py-3">
+        {paths.length === 1 && (
+          <p className="spec-note">
+            At function granularity the task statement is the spec: it names the files and regions to implement, and
+            each region&apos;s detailed contract sits in the source code next to it.
+          </p>
+        )}
+        {text === undefined ? (
+          <p className="font-mono text-xs text-zinc-500">loading…</p>
+        ) : text === null ? (
+          <p className="font-mono text-xs text-zinc-500">could not load {sel}</p>
+        ) : (
+          <SpecMarkdown text={text} />
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ---------------- tabbed detail（带工具栏） ---------------- */
 
 export default function TaskDetailView({ taskId, detail }: { taskId: string; detail: TaskTrajectory }) {
   const nFiles = detail.files ? Object.keys(detail.files).length : 0;
   const hasVerifier = !!detail.verdict || !!detail.stdout;
+  const specPaths = (specIndex as Record<string, string[]>)[taskId] ?? [];
   const tabs = [
     { key: "turns" as const, label: `Turns (${detail.turns.length})` },
+    { key: "specs" as const, label: `Specs (${specPaths.length})`, disabled: specPaths.length === 0 },
     { key: "verifier" as const, label: "Verifier", disabled: !hasVerifier },
     { key: "files" as const, label: `Files (${nFiles})`, disabled: nFiles === 0 },
   ];
-  const [tab, setTab] = useState<"turns" | "verifier" | "files">("turns");
+  const [tab, setTab] = useState<"turns" | "specs" | "verifier" | "files">("turns");
 
   /* turns 工具栏状态：focus 隐藏 system turn；openSet 控制展开 */
   const [showSystem, setShowSystem] = useState(false);
@@ -286,6 +350,7 @@ export default function TaskDetailView({ taskId, detail }: { taskId: string; det
           </div>
         </>
       )}
+      {tab === "specs" && <SpecsView task={taskId} paths={specPaths} />}
       {tab === "verifier" && <VerifierView detail={detail} />}
       {tab === "files" && detail.files && <FilesView files={detail.files} />}
     </div>
