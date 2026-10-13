@@ -1594,6 +1594,16 @@ a.brand:hover .bm-frame {
   background: linear-gradient(to left, transparent, var(--color-ink));
 }
 
+/* paper page: the PDF viewer fills the band below the title */
+.paper-frame {
+  width: 100%;
+  height: calc(100vh - 7rem);
+  min-height: 32rem;
+  border: 1px solid var(--color-line);
+  border-radius: 0.75rem;
+  background: var(--color-panel);
+}
+
 /* traces pages follow the same rules: no window chrome, one green accent, grays otherwise */
 .tv-head {
   display: flex;
