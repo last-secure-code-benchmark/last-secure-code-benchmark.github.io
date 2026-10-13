@@ -17,10 +17,11 @@ export default function Hero() {
         <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-zinc-400">
           <span className="font-mono text-acc">450</span> tasks built from{" "}
           <span className="font-mono text-acc">150</span> real vulnerabilities — 7 languages, 115
-          CVEs, 24 CWEs. Each task asks the agent to implement a functional specification that{" "}
-          <em>never mentions security</em>, but whose required behavior is derived from a real
-          vulnerability fix. A task counts only when its functional tests pass{" "}
-          <em>and</em> its security tests, which replay the original attack, find no vulnerability.
+          CVEs, 24 CWEs. Each task asks the agent to implement a functional specification, the
+          way a developer asks for code when vibe coding. The spec{" "}
+          <em>never mentions security</em>, so the agent has to recognize and handle the risk on
+          its own. A task counts only when its functional tests pass <em>and</em> its security
+          tests, which replay the original attack, find no vulnerability.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
