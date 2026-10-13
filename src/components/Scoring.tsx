@@ -56,7 +56,7 @@ export default function Scoring() {
             items={[
               "writes the code the spec asks for",
               "may build, run, and test the project",
-              "never sees the tests or the fix",
+              "never sees the hidden tests or the fix",
             ]}
           />
           <Arrow />

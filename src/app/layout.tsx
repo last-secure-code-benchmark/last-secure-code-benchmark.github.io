@@ -16,12 +16,12 @@ const jbMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Last Secure Code Benchmark: Is the Code You Vibe Secure?",
   description:
-    "Last Secure Code Benchmark (LSCB) — 450 tasks built from 150 real vulnerabilities across 7 languages, 115 CVEs and 24 CWEs. Each task asks a coding agent to implement a functional specification that never mentions security, but whose required behavior is derived from a real vulnerability fix. A submission counts only when the project's tests pass and the security tests, which replay the original attack, find no vulnerability.",
+    "Last Secure Code Benchmark (LSCB) — 450 tasks built from 150 real vulnerabilities across 7 languages, 115 CVEs and 24 CWEs. Each task asks a coding agent to implement a functional specification, as in everyday vibe coding. The spec never mentions security, so the agent has to recognize and handle the risk on its own. A submission counts only when the hidden functional tests pass and the security tests, which replay the original attack, find no vulnerability.",
   keywords: ["CyberSecurity", "Code Generation", "Agent", "Secure Code Generation"],
   openGraph: {
     title: "Last Secure Code Benchmark: Is the Code You Vibe Secure?",
     description:
-      "450 tasks from 150 real vulnerabilities. Agents reconstruct code from security-blind functional specs; a task counts only when its functional and security tests both pass.",
+      "450 tasks from 150 real vulnerabilities. Agents implement functional specs that never mention security; a task counts only when its functional and security tests both pass.",
   },
 };
 
