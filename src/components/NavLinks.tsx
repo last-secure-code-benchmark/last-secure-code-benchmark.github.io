@@ -9,7 +9,6 @@ const LINKS = [
   { href: "/#overview", label: "Overview", match: null },
   { href: "/#scoring", label: "Scoring", match: null },
   { href: "/#case-study", label: "Case Study", match: null },
-  { href: "/#citation", label: "Citation", match: null },
   { href: "/traces", label: "Traces", match: "/traces" },
 ] as const;
 

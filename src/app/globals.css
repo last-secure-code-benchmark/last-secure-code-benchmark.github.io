@@ -465,43 +465,6 @@ a:hover .logo-skull {
   color: var(--color-acc);
 }
 
-/* bibtex */
-.bibtex-box {
-  position: relative;
-  border: 1px solid var(--color-line);
-  border-radius: 0.75rem;
-  background: #0b1426;
-  padding: 1.25rem;
-  overflow-x: auto;
-}
-
-.bibtex-box pre {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.7;
-  color: #a7f3d0;
-}
-
-.copy-btn {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  border: 1px solid var(--color-line);
-  border-radius: 0.4rem;
-  background: #141f3a;
-  padding: 0.3rem 0.7rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: #a1a1aa;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.copy-btn:hover {
-  color: var(--color-acc);
-  border-color: rgba(52, 211, 153, 0.5);
-}
-
 /* ---------- light theme ----------
    组件大量用 text-zinc-* 工具类；白天模式直接把 zinc 刻度反转，
    再覆盖语义变量和少量硬编码颜色的类。 */
@@ -659,23 +622,6 @@ a:hover .logo-skull {
   color: #94a3b8;
 }
 
-:root[data-theme="light"] .bibtex-box {
-  background: #f8fafc;
-}
-
-:root[data-theme="light"] .bibtex-box pre {
-  color: #047857;
-}
-
-:root[data-theme="light"] .copy-btn {
-  background: #ffffff;
-  color: #475569;
-}
-
-:root[data-theme="light"] .copy-btn:hover {
-  color: var(--color-acc);
-}
-
 :root[data-theme="light"] .fig-placeholder {
   border-color: #cbd5e1;
   background:
@@ -823,9 +769,6 @@ a:hover .logo-skull {
 }
 :root[data-theme="light"] .th-sort:hover { color: #2d2a23; }
 :root[data-theme="light"] .subrow-toggle { color: #a39c8d; }
-:root[data-theme="light"] .bibtex-box { background: #f3f0e8; }
-:root[data-theme="light"] .bibtex-box pre { color: #895940; }
-:root[data-theme="light"] .copy-btn { background: #e8e4d9; color: #4a453a; }
 :root[data-theme="light"] .fig-placeholder {
   border-color: #d9d4c8;
   background:
