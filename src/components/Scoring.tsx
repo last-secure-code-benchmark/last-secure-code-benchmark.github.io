@@ -35,36 +35,37 @@ export default function Scoring() {
           <p className="section-kicker">methodology</p>
           <h2 className="section-title mt-2">How a Run Is Scored</h2>
           <p className="mt-3 text-sm text-zinc-400">
-            Two independent booleans per task. No partial credit, no judge model — just the
-            project&apos;s own tests and the original exploit.
+            The agent writes code from a functional spec, as in everyday vibe coding. Two
+            booleans per task come from hidden tests that run after it stops. No partial credit,
+            no judge model.
           </p>
         </div>
 
         <div className="mx-auto mt-10 flex max-w-5xl flex-wrap items-stretch justify-center gap-y-4">
           <Card
-            title="CVE task"
+            title="Task"
             items={[
-              "real project @ vulnerable commit",
-              "vulnerability description",
-              <>context tier: <span className="font-mono">function / file / repo</span></>,
+              "real project, target code withheld",
+              "functional spec that never mentions security",
+              <>granularity: <span className="font-mono">function / file / repo</span></>,
             ]}
           />
           <Arrow />
           <Card
-            title="Agent patches"
+            title="Agent implements"
             items={[
-              "locates the vulnerable code",
-              "edits the project in place",
-              "no hints about the tests ahead",
+              "writes the code the spec asks for",
+              "may build, run, and test the project",
+              "never sees the tests or the fix",
             ]}
           />
           <Arrow />
           <Card
             title="Verifier"
             items={[
-              <><span className="font-mono text-emerald-300/90">test_func.py</span> — project suite still green?</>,
-              <><span className="font-mono text-rose-300/90">test_vuln.py</span> — original exploit stopped?</>,
-              "runs in a clean container",
+              <><span className="font-mono text-emerald-300/90">test_func.py</span> — does it do what the spec asks?</>,
+              <><span className="font-mono text-rose-300/90">test_vuln.py</span> — does it stop the original attack?</>,
+              "rebuilds the agent's code in a clean container",
             ]}
           />
           <Arrow />
@@ -74,18 +75,18 @@ export default function Scoring() {
             items={[
               <><span className="font-mono">reward = functional ∧ secure</span></>,
               <><span className="text-acc">(1,1)</span> solved</>,
-              <><span className="text-yellow-300/90">(1,0)</span> runs, but still vulnerable</>,
-              <><span className="text-rose-300/90">(0,x)</span> broke the project</>,
+              <><span className="text-yellow-300/90">(1,0)</span> works, but vulnerable</>,
+              <><span className="text-rose-300/90">(0,x)</span> not functional</>,
             ]}
           />
         </div>
 
         <div className="content mx-auto mt-8 max-w-3xl text-sm text-zinc-500">
           <p>
-            The <em>(1,0)</em> cell is the one this benchmark exists to expose: an agent that
-            keeps every test green while leaving the CVE open looks successful under a
-            tests-only evaluation — and isn&apos;t. The gap between a model&apos;s Functional
-            count and its Reward count on the leaderboard is exactly this failure mode.
+            The <em>(1,0)</em> cell is the one this benchmark exists to expose: code that does
+            everything the spec asks and still carries the original vulnerability. A user who
+            only checks that the code works would ship it. On the leaderboard, the gap between a
+            model&apos;s Functional and Func∧Sec columns is exactly this case.
           </p>
         </div>
       </div>
