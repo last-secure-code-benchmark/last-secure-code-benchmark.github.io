@@ -20,10 +20,10 @@ const VIEWS: Record<"overall" | "granularity", { name: string; cols: Col[] }> = 
   overall: {
     name: "Overall",
     cols: [
-      { label: "Func∧Sec", tip: "Both the functional and the security suite pass", value: (r) => r.joint, main: true },
       { label: "Functional", tip: "The functional suite passes", value: (r) => r.func },
       { label: "Secure", tip: "The security suite passes", value: (r) => r.sec },
-      { label: "All three", tip: "Scenarios solved at function, file, and repository granularity", value: (r) => r.scenarioJoint },
+      { label: "Func∧Sec", tip: "Both the functional and the security suite pass", value: (r) => r.joint, main: true },
+      { label: "All three", tip: "Scenarios solved at function, file, and repository granularity", value: (r) => r.scenarioJoint, main: true },
     ],
   },
   granularity: {
@@ -32,7 +32,7 @@ const VIEWS: Record<"overall" | "granularity", { name: string; cols: Col[] }> = 
       { label: "Function", tip: "Func∧Sec on function-granularity tasks", value: (r) => r.tiers.function, main: true },
       { label: "File", tip: "Func∧Sec on file-granularity tasks", value: (r) => r.tiers.file, main: true },
       { label: "Repository", tip: "Func∧Sec on repository-granularity tasks", value: (r) => r.tiers.repo, main: true },
-      { label: "All three", tip: "Scenarios solved at all three granularities", value: (r) => r.scenarioJoint },
+      { label: "All three", tip: "Scenarios solved at all three granularities", value: (r) => r.scenarioJoint, main: true },
     ],
   },
 };
