@@ -42,6 +42,13 @@ export default function Citation() {
               {copied ? "Copied!" : "Copy"}
             </button>
           </div>
+          <p className="mt-6 text-sm text-zinc-400">
+            For questions or feedback, contact{" "}
+            <a href="mailto:tianyi_wu@u.nus.edu" className="text-acc hover:underline">
+              Tianyi Wu
+            </a>
+            .
+          </p>
         </div>
       </div>
     </section>
