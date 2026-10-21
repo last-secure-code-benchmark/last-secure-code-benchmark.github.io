@@ -59,6 +59,16 @@ export default function Hero() {
             Traces
           </a>
         </div>
+
+        <div className="mt-4 flex justify-center">
+          <a href={withBase("/submit")} className="btn btn-ghost">
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 19V5" />
+              <path d="m5 12 7-7 7 7" />
+            </svg>
+            Submit Your Own Result
+          </a>
+        </div>
         </div>
       </div>
     </div>
