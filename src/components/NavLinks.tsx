@@ -11,6 +11,7 @@ const LINKS = [
   { href: "/#case-study", label: "Case Study", match: null },
   { href: "/#citation", label: "Citation", match: null },
   { href: "/traces", label: "Traces", match: "/traces" },
+  { href: "/submit", label: "Submit", match: "/submit" },
 ] as const;
 
 export default function NavLinks() {
